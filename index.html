@@ -20,7 +20,7 @@
   .container {
     max-width: 420px;
     width: 100%;
-    padding: 16px 18px;
+    padding: 14px 16px;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
   }
@@ -28,14 +28,15 @@
   h1 {
     font-size: 1rem;
     margin-top: 0;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: 600;
+    text-align: center;
   }
 
   .row {
     display: flex;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   input {
@@ -47,14 +48,14 @@
   }
 
   input.error {
-    border-color: #ef4444;   /* red */
+    border-color: #ef4444;
   }
 
   button {
     padding: 8px 10px;
     border-radius: 10px;
     border: 1px solid #d1d5db;
-    background: #f9fafb;
+    background: #fafafa;
     cursor: pointer;
     font-size: 0.85rem;
   }
@@ -69,11 +70,11 @@
 
   .countdown {
     text-align: center;
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-top: 8px;
-    margin-bottom: 6px;
-    min-height: 2.4em;
+    margin-top: 4px;
+    margin-bottom: 0px; /* tighter spacing */
+    min-height: 2.2em;
   }
 
   .subtitle {
@@ -81,6 +82,7 @@
     font-size: 0.9rem;
     font-weight: 500;
     color: #555;
+    margin-top: 0px; /* minimal gap */
     min-height: 1.2em;
   }
 </style>
@@ -89,6 +91,7 @@
 <body>
 <div class="container">
 
+  <!-- INPUT STATE -->
   <div id="inputState">
     <h1>Countdown to next interview</h1>
 
@@ -100,16 +103,17 @@
       <input id="datetime" type="datetime-local">
     </div>
 
-    <div class="row">
-      <button id="start">Start</button>
+    <div class="row center">
+      <button id="start" style="width:100%;">Start</button>
     </div>
   </div>
 
+  <!-- COUNTDOWN STATE -->
   <div id="countdownState" style="display:none;">
     <div class="countdown" id="countdownDisplay"></div>
     <div class="subtitle" id="subtitle"></div>
 
-    <div class="center" style="margin-top:10px;">
+    <div class="center" style="margin-top:8px;">
       <button id="reset">Reset</button>
     </div>
   </div>
@@ -146,7 +150,6 @@
   function validateInputs() {
     let valid = true;
 
-    // name required
     if (!nameInput.value.trim()) {
       nameInput.classList.add("error");
       valid = false;
@@ -154,7 +157,6 @@
       nameInput.classList.remove("error");
     }
 
-    // date required
     if (!datetimeInput.value) {
       datetimeInput.classList.add("error");
       valid = false;
@@ -215,20 +217,21 @@
 
   resetBtn.addEventListener("click", () => {
     if (timer) clearInterval(timer);
+
     targetTime = null;
     interviewName = "";
-
     clearState();
 
     nameInput.value = "";
     datetimeInput.value = "";
+
     nameInput.classList.remove("error");
     datetimeInput.classList.remove("error");
 
     showInputState();
   });
 
-  // Restore previous session if exists
+  // Restore saved countdown on load
   window.addEventListener("load", () => {
     const savedTime = localStorage.getItem("interviewTarget");
     const savedName = localStorage.getItem("interviewName");
