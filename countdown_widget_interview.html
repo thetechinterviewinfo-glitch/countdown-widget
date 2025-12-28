@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Countdown to next interview</title>
+
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 420px;
+    width: 100%;
+    padding: 18px 20px 22px 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  button:hover {
+    background: #f3f4f6;
+  }
+
+  .countdown {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 10px;
+    min-height: 2.2em;
+  }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Countdown to next interview</h1>
+
+  <div class="row">
+    <input id="datetime" type="datetime-local">
+  </div>
+
+  <div class="row">
+    <button id="start">Start / Update</button>
+    <button id="clear">Clear</button>
+  </div>
+
+  <div id="countdown" class="countdown"></div>
+</div>
+
+<script>
+  const datetimeInput = document.getElementById("datetime");
+  const countdownEl = document.getElementById("countdown");
+  const startBtn = document.getElementById("start");
+  const clearBtn = document.getElementById("clear");
+
+  let targetTime = null;
+  let timer = null;
+
+  function updateCountdown() {
+    if (!targetTime) return;
+
+    const now = new Date().getTime();
+    const distance = targetTime - now;
+
+    if (distance <= 0) {
+      countdownEl.textContent = "Time’s up!";
+      clearInterval(timer);
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
+
+    countdownEl.textContent =
+      `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  startBtn.addEventListener("click", () => {
+    const value = datetimeInput.value;
+    if (!value) {
+      countdownEl.textContent = "Please choose a valid date and time.";
+      return;
+    }
+
+    targetTime = new Date(value).getTime();
+
+    if (timer) clearInterval(timer);
+    timer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  });
+
+  clearBtn.addEventListener("click", () => {
+    targetTime = null;
+    datetimeInput.value = "";
+    countdownEl.textContent = "";
+    if (timer) clearInterval(timer);
+  });
+</script>
+</body>
+</html>
