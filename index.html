@@ -73,8 +73,8 @@
     font-size: 2rem;
     font-weight: 700;
     margin-top: 2px;
-    margin-bottom: 0;     /* No bottom gap */
-    line-height: 1.1;     /* Pull lines closer */
+    margin-bottom: 0;
+    line-height: 1.1;
   }
 
   .subtitle {
@@ -82,8 +82,8 @@
     font-size: 0.9rem;
     font-weight: 500;
     color: #555;
-    margin-top: 0;        /* No top gap */
-    line-height: 1.1;
+    margin-top: 4px; /* comfortable gap between countdown and subtitle */
+    line-height: 1.15;
   }
 </style>
 </head>
@@ -91,6 +91,7 @@
 <body>
 <div class="container">
 
+  <!-- INPUT STATE -->
   <div id="inputState">
     <h1>Countdown to next interview</h1>
 
@@ -107,6 +108,7 @@
     </div>
   </div>
 
+  <!-- COUNTDOWN STATE -->
   <div id="countdownState" style="display:none;">
     <div class="countdown" id="countdownDisplay"></div>
     <div class="subtitle" id="subtitle"></div>
@@ -245,5 +247,6 @@
 </script>
 </body>
 </html>
+
 
 
