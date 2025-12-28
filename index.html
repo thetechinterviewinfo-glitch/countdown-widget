@@ -28,11 +28,12 @@
     flex-direction: column;
     align-items: center;
     transition: width 0.2s ease;
+    overflow: hidden; /* ensures Notion respects the border radius */
   }
 
   /* Wider input mode */
   .container.input-mode {
-    width: 460px; /* wider for inputs */
+    width: 500px; /* wider for inputs */
   }
 
   /* Fixed width countdown mode */
@@ -55,12 +56,12 @@
   }
 
   input {
+    width: 100%; /* fills the container */
     flex: 1;
     padding: 8px 10px;
-    border-radius: 10px; /* input fields also rounded */
+    border-radius: 10px;
     border: 1px solid #d1d5db;
     font-size: 0.9rem;
-    width: 100%;
     box-sizing: border-box;
   }
 
@@ -107,169 +108,8 @@
 </head>
 
 <body>
-<div class="container input-mode" id="container">
+<div class="container input-mod
 
-  <!-- INPUT STATE -->
-  <div id="inputState">
-    <h1>Countdown to next interview</h1>
-
-    <div class="row">
-      <input id="label" type="text" placeholder="Interview name (e.g., Google interview)">
-    </div>
-
-    <div class="row">
-      <input id="datetime" type="datetime-local">
-    </div>
-
-    <div class="row center">
-      <button id="start" style="width:100%;">Start</button>
-    </div>
-  </div>
-
-  <!-- COUNTDOWN STATE -->
-  <div id="countdownState" style="display:none;">
-    <div class="countdown" id="countdownDisplay"></div>
-    <div class="subtitle" id="subtitle"></div>
-
-    <div class="center" style="margin-top:8px;">
-      <button id="reset">Reset</button>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  const container = document.getElementById("container");
-  const nameInput = document.getElementById("label");
-  const datetimeInput = document.getElementById("datetime");
-
-  const inputState = document.getElementById("inputState");
-  const countdownState = document.getElementById("countdownState");
-
-  const countdownDisplay = document.getElementById("countdownDisplay");
-  const subtitle = document.getElementById("subtitle");
-
-  const startBtn = document.getElementById("start");
-  const resetBtn = document.getElementById("reset");
-
-  let targetTime = null;
-  let interviewName = "";
-  let timer = null;
-
-  function saveState() {
-    localStorage.setItem("interviewTarget", targetTime);
-    localStorage.setItem("interviewName", interviewName);
-  }
-
-  function clearState() {
-    localStorage.removeItem("interviewTarget");
-    localStorage.removeItem("interviewName");
-  }
-
-  function validateInputs() {
-    let valid = true;
-
-    if (!nameInput.value.trim()) {
-      nameInput.classList.add("error");
-      valid = false;
-    } else {
-      nameInput.classList.remove("error");
-    }
-
-    if (!datetimeInput.value) {
-      datetimeInput.classList.add("error");
-      valid = false;
-    } else {
-      datetimeInput.classList.remove("error");
-    }
-
-    return valid;
-  }
-
-  function showInputState() {
-    inputState.style.display = "block";
-    countdownState.style.display = "none";
-    container.classList.add("input-mode");
-    container.classList.remove("countdown-mode");
-  }
-
-  function showCountdownState() {
-    inputState.style.display = "none";
-    countdownState.style.display = "block";
-    container.classList.add("countdown-mode");
-    container.classList.remove("input-mode");
-  }
-
-  function updateCountdown() {
-    if (!targetTime) return;
-
-    const now = new Date().getTime();
-    const distance = targetTime - now;
-
-    if (distance <= 0) {
-      countdownDisplay.textContent = "Good luck!";
-      subtitle.textContent = `for ${interviewName}`;
-      clearInterval(timer);
-      return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((distance / (1000 * 60)) % 60);
-    const seconds = Math.floor((distance / 1000) % 60);
-
-    countdownDisplay.textContent =
-      `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-    subtitle.textContent = `until ${interviewName}`;
-  }
-
-  startBtn.addEventListener("click", () => {
-    if (!validateInputs()) return;
-
-    interviewName = nameInput.value.trim();
-    targetTime = new Date(datetimeInput.value).getTime();
-
-    saveState();
-    showCountdownState();
-
-    if (timer) clearInterval(timer);
-    timer = setInterval(updateCountdown, 1000);
-    updateCountdown();
-  });
-
-  resetBtn.addEventListener("click", () => {
-    if (timer) clearInterval(timer);
-
-    targetTime = null;
-    interviewName = "";
-    clearState();
-
-    nameInput.value = "";
-    datetimeInput.value = "";
-
-    nameInput.classList.remove("error");
-    datetimeInput.classList.remove("error");
-
-    showInputState();
-  });
-
-  window.addEventListener("load", () => {
-    const savedTime = localStorage.getItem("interviewTarget");
-    const savedName = localStorage.getItem("interviewName");
-
-    if (savedTime && savedName) {
-      targetTime = parseInt(savedTime);
-      interviewName = savedName;
-
-      showCountdownState();
-      timer = setInterval(updateCountdown, 1000);
-      updateCountdown();
-    }
-  });
-</script>
-</body>
-</html>
 
 
 
