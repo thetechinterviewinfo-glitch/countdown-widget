@@ -19,7 +19,7 @@
   }
 
   .container {
-    border-radius: 16px;
+    border-radius: 16px; /* always rounded */
     border: 1px solid #e5e7eb;
     background: #ffffff;
     box-sizing: border-box;
@@ -32,7 +32,7 @@
 
   /* Wider input mode */
   .container.input-mode {
-    width: 440px; /* wider for inputs */
+    width: 460px; /* wider for inputs */
   }
 
   /* Fixed width countdown mode */
@@ -57,10 +57,11 @@
   input {
     flex: 1;
     padding: 8px 10px;
-    border-radius: 10px;
+    border-radius: 10px; /* input fields also rounded */
     border: 1px solid #d1d5db;
     font-size: 0.9rem;
     width: 100%;
+    box-sizing: border-box;
   }
 
   input.error {
@@ -91,7 +92,7 @@
     margin-top: 2px;
     margin-bottom: 0;
     line-height: 1.1;
-    width: 15ch;
+    width: 15ch; /* fixed width to avoid jumping numbers */
   }
 
   .subtitle {
@@ -269,5 +270,6 @@
 </script>
 </body>
 </html>
+
 
 
