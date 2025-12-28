@@ -30,14 +30,14 @@
     transition: width 0.2s ease;
   }
 
-  /* Width for input state */
+  /* Wider input mode */
   .container.input-mode {
-    width: 360px; /* slightly wider */
+    width: 400px; /* slightly wider for inputs */
   }
 
-  /* Width for countdown state */
+  /* Fixed width countdown mode */
   .container.countdown-mode {
-    width: 300px; /* fixed width */
+    width: 300px;
   }
 
   h1 {
@@ -60,6 +60,7 @@
     border-radius: 10px;
     border: 1px solid #d1d5db;
     font-size: 0.9rem;
+    width: 100%; /* ensures full width in wider container */
   }
 
   input.error {
@@ -90,8 +91,7 @@
     margin-top: 2px;
     margin-bottom: 0;
     line-height: 1.1;
-    width: 15ch; /* fixed width based on max characters like 99d 23h 59m 59s */
-    text-align: center;
+    width: 15ch; /* fixed width to avoid jumping numbers */
   }
 
   .subtitle {
@@ -269,5 +269,4 @@
 </script>
 </body>
 </html>
-
 
