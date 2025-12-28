@@ -61,10 +61,21 @@
 
   .countdown {
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 600;
     margin-top: 10px;
     min-height: 2.2em;
+  }
+
+  .label {
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: 6px;
+    color: #374151;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>
 </head>
@@ -73,26 +84,87 @@
 <div class="container">
   <h1>Countdown to next interview</h1>
 
-  <div class="row">
-    <input id="datetime" type="datetime-local">
+  <!-- Setup section -->
+  <div id="setup">
+    <div class="row">
+      <input id="title" type="text" placeholder="e.g., Google interview">
+    </div>
+
+    <div class="row">
+      <input id="datetime" type="datetime-local">
+    </div>
+
+    <div class="row">
+      <button id="start">Start / Update</button>
+      <button id="clear">Clear</button>
+    </div>
   </div>
 
-  <div class="row">
-    <button id="start">Start / Update</button>
-    <button id="clear">Clear</button>
-  </div>
+  <!-- Active countdown section -->
+  <div id="active" class="hidden">
+    <div id="label" class="label"></div>
+    <div id="countdown" class="countdown"></div>
 
-  <div id="countdown" class="countdown"></div>
+    <div class="row" style="justify-content:center;">
+      <button id="reset">Reset</button>
+    </div>
+  </div>
 </div>
 
 <script>
+  const titleInput = document.getElementById("title");
   const datetimeInput = document.getElementById("datetime");
   const countdownEl = document.getElementById("countdown");
+  const labelEl = document.getElementById("label");
+
   const startBtn = document.getElementById("start");
   const clearBtn = document.getElementById("clear");
+  const resetBtn = document.getElementById("reset");
+
+  const setupSection = document.getElementById("setup");
+  const activeSection = document.getElementById("active");
 
   let targetTime = null;
+  let interviewTitle = "";
   let timer = null;
+
+  const STORAGE_KEY = "interviewCountdownState";
+
+  function saveState() {
+    if (!targetTime || !interviewTitle) return;
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        targetTime,
+        interviewTitle
+      })
+    );
+  }
+
+  function clearState() {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  function showSetup() {
+    setupSection.classList.remove("hidden");
+    activeSection.classList.add("hidden");
+  }
+
+  function showActive() {
+    setupSection.classList.add("hidden");
+    activeSection.classList.remove("hidden");
+  }
 
   function updateCountdown() {
     if (!targetTime) return;
@@ -102,6 +174,7 @@
 
     if (distance <= 0) {
       countdownEl.textContent = "Time’s up!";
+      labelEl.textContent = `for ${interviewTitle}`;
       clearInterval(timer);
       return;
     }
@@ -111,30 +184,67 @@
     const minutes = Math.floor((distance / (1000 * 60)) % 60);
     const seconds = Math.floor((distance / 1000) % 60);
 
-    countdownEl.textContent =
-      `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    labelEl.textContent = `until ${interviewTitle}`;
   }
 
   startBtn.addEventListener("click", () => {
+    const title = titleInput.value.trim();
     const value = datetimeInput.value;
+
+    if (!title) {
+      countdownEl.textContent = "Please enter the interview name.";
+      return;
+    }
+
     if (!value) {
       countdownEl.textContent = "Please choose a valid date and time.";
       return;
     }
 
+    interviewTitle = title;
     targetTime = new Date(value).getTime();
 
     if (timer) clearInterval(timer);
     timer = setInterval(updateCountdown, 1000);
+
+    saveState();
     updateCountdown();
+    showActive();
   });
 
   clearBtn.addEventListener("click", () => {
-    targetTime = null;
+    titleInput.value = "";
     datetimeInput.value = "";
     countdownEl.textContent = "";
-    if (timer) clearInterval(timer);
   });
+
+  resetBtn.addEventListener("click", () => {
+    if (timer) clearInterval(timer);
+    targetTime = null;
+    interviewTitle = "";
+    countdownEl.textContent = "";
+    labelEl.textContent = "";
+
+    clearState();
+    showSetup();
+  });
+
+  // -------- Load saved state on page load --------
+  const saved = loadState();
+  if (saved && saved.targetTime && saved.interviewTitle) {
+    targetTime = saved.targetTime;
+    interviewTitle = saved.interviewTitle;
+
+    if (timer) clearInterval(timer);
+    timer = setInterval(updateCountdown, 1000);
+
+    updateCountdown();
+    showActive();
+  } else {
+    showSetup();
+  }
 </script>
 </body>
 </html>
+
