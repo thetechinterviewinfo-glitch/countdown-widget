@@ -13,25 +13,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent; /* lets Notion’s frame handle the background */
+    background: transparent;
     overflow: hidden;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   }
 
   .container {
-    width: 100%;
-    max-width: 420px;
-    padding: 14px 16px;
-    border-radius: 16px;  /* fully round the widget */
+    border-radius: 16px;
     border: 1px solid #e5e7eb;
     background: #ffffff;
     box-sizing: border-box;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.2s ease;
+  }
+
+  /* Width for input state */
+  .container.input-mode {
+    width: 360px; /* slightly wider */
+  }
+
+  /* Width for countdown state */
+  .container.countdown-mode {
+    width: 300px; /* fixed width */
   }
 
   h1 {
     font-size: 1rem;
-    margin-top: 0;
-    margin-bottom: 8px;
+    margin: 0 0 8px 0;
     font-weight: 600;
     text-align: center;
   }
@@ -40,6 +51,7 @@
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
+    width: 100%;
   }
 
   input {
@@ -78,6 +90,8 @@
     margin-top: 2px;
     margin-bottom: 0;
     line-height: 1.1;
+    width: 15ch; /* fixed width based on max characters like 99d 23h 59m 59s */
+    text-align: center;
   }
 
   .subtitle {
@@ -92,7 +106,7 @@
 </head>
 
 <body>
-<div class="container">
+<div class="container input-mode" id="container">
 
   <!-- INPUT STATE -->
   <div id="inputState">
@@ -124,6 +138,7 @@
 </div>
 
 <script>
+  const container = document.getElementById("container");
   const nameInput = document.getElementById("label");
   const datetimeInput = document.getElementById("datetime");
 
@@ -173,11 +188,15 @@
   function showInputState() {
     inputState.style.display = "block";
     countdownState.style.display = "none";
+    container.classList.add("input-mode");
+    container.classList.remove("countdown-mode");
   }
 
   function showCountdownState() {
     inputState.style.display = "none";
     countdownState.style.display = "block";
+    container.classList.add("countdown-mode");
+    container.classList.remove("input-mode");
   }
 
   function updateCountdown() {
@@ -250,4 +269,5 @@
 </script>
 </body>
 </html>
+
 
