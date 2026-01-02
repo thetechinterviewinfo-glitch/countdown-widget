@@ -24,7 +24,7 @@
   }
 
   .container {
-    width: 330px; /* slightly narrower than previous 360px */
+    width: 315px; /* slightly narrower than previous 330px */
     padding: 14px 18px 16px 18px;
     border: 1px solid #e5e7eb;
     border-radius: 18px;
@@ -52,9 +52,9 @@
     border: 1px solid #d1d5db;
     font-size: 0.9rem;
     width: 100%;
+    box-sizing: border-box;
   }
 
-  /* tuned to new width so placeholder fits */
   .wide-input {
     max-width: 290px;
   }
@@ -80,11 +80,15 @@
     font-size: 1.7rem;
     font-weight: 600;
     min-height: 2.2em;
+    margin-top: 4px;
+    margin-bottom: 0;
+    line-height: 1.1;
   }
 
   .subtitle {
     font-size: 0.9rem;
-    margin-top: 6px;
+    margin-top: 4px;
+    line-height: 1.15;
   }
 
   .hidden {
@@ -172,6 +176,7 @@
 
     if (distance <= 0) {
       countdownEl.textContent = "Good luck!";
+      subtitleEl.textContent = "";
       clearInterval(timer);
       return;
     }
@@ -237,6 +242,7 @@
 
     nameInput.value = "";
     datetimeInput.value = "";
+
     nameInput.classList.remove("error");
     datetimeInput.classList.remove("error");
 
@@ -247,3 +253,4 @@
 </script>
 </body>
 </html>
+
